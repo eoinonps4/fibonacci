@@ -1,0 +1,14 @@
+FROM node:16-alpine
+
+USER node
+# create this dir vbefore specifcying workdir to avoid 
+# permissions conflict, if dir wasnt there it would be created with root ownership
+RUN mkdir -p /home/node/app
+WORKDIR 'home/node/app'
+
+# chown sets ownership of copied files, think of chmod
+COPY --chown=node:node ./package.json ./
+RUN npm install
+COPY --chown=node:node ./ ./
+
+CMD ["npm","run","start"]

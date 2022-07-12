@@ -1,0 +1,7 @@
+FROM nginx
+
+COPY ./default.conf /etc/nginx/conf.d/default.conf
+
+# Dont need to state CMD because if we dont
+# it pulls the default cmd from base image and uses that
+# CMD []
