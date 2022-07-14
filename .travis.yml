@@ -1,0 +1,35 @@
+language: generic
+sudo: required
+services:
+  - docker
+# Only want to build image for client, cos we're only
+# testing react assets, if we added test suites for worker & server we could
+# Build image for them too
+before_install:
+  - docker build -t eoinwhelan64/client_test -f  ./client/Dockerfile.dev ./client
+  #- docker build -t eoinwhelan64/server -f  server/Dockerfile.dev ./server
+# Script section in travis is primary "test" section, ie if anything
+#here exits with anything other than 0, it's a unit test fail
+# scripts is travis keyword for unit tests
+# because npm run test hangs waiting for input, add -e CI=true to tell travis not to wait for input
+script:
+  - docker run -e CI=true eoinwhelan64/client_test npm run test
+# after_success literally does everything you want to do#
+# after the tests. So all building deploying you wanna do comes in here
+after_success:
+  - docker build -t eoinwhelan64/fibonacci-client ./client
+  - docker build -t eoinwhelan64/fibonacci-server ./server
+  - docker build -t eoinwhelan64/fibonacci-worker ./worker
+  - docker build -t eoinwhelan64/fibonacci-nginx ./nginx
+
+  # Log in to docker CLI so that images can be pushed to hub
+  # Obvs no plaintext login + password, use travis CI env variables
+  # below is doing docker login step in one single command, no interativity
+  # with travis so need to login like this
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --pasword-stdin
+  # Take these images and push them to docker hub
+  # the push is same as a push to github, just give tag of image to push
+  - docker push eoinwhelan64/fibonacci-client
+  - docker push eoinwhelan64/fibonacci-server
+  - docker push eoinwhelan64/fibonacci-worker
+  - docker push eoinwhelan64/fibonacci-nginx
