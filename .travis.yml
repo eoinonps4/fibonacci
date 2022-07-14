@@ -25,7 +25,7 @@ after_success:
   # Obvs no plaintext login + password, use travis CI env variables
   # below is doing docker login step in one single command, no interativity
   # with travis so need to login like this
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --pasword-stdin
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
   # Take these images and push them to docker hub
   # the push is same as a push to github, just give tag of image to push
   - docker push eoinwhelan64/fibonacci-client
