@@ -21,7 +21,6 @@ after_success:
   - docker build -t eoinwhelan64/fibonacci-server ./server
   - docker build -t eoinwhelan64/fibonacci-worker ./worker
   - docker build -t eoinwhelan64/fibonacci-nginx ./nginx
-
   # Log in to docker CLI so that images can be pushed to hub
   # Obvs no plaintext login + password, use travis CI env variables
   # below is doing docker login step in one single command, no interativity
