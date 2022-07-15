@@ -32,3 +32,20 @@ after_success:
   - docker push eoinwhelan64/fibonacci-api
   - docker push eoinwhelan64/fibonacci-worker
   - docker push eoinwhelan64/fibonacci-nginx
+
+deploy:
+  provider: elasticbeanstalk
+  region: "us-west-2"
+  app: "fibonacci-multi-docker"
+  env: "Fibonaccimultidocker-env"
+  # With bucket name we're telling travis where to zip up & stash our project
+  # which will be in an S3 bucket on aws
+  bucket_name: "elasticbeanstalk-us-west-2-960659685635"
+  # unless S3 bucket has 1+ folders, theres no path for us.
+  # so whatever we specify here is the folder name we will initialise
+  bucket_path: "fibonacci-app"
+  on:
+    # Only deploy on branch master
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
