@@ -35,7 +35,7 @@ services:
       - REDIS_HOST=$REDIS_HOST
       - REDIS_PORT=$REDIS_PORT
   nginx:
-    image: "eoinwhelan64/nginx"
+    image: "eoinwhelan64/fibonacci-nginx"
     depends_on:
       - api
       - client
