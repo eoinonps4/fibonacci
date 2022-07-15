@@ -1,0 +1,44 @@
+version: '3'
+services:
+  api:
+    image: "eoinwhelan64/fibonacci-api"
+    hostname: api
+    # This mem limit matches the provision of mem on free tier of AWS EB
+    # We need to set this or the EB deployment fails. EB needs to know
+    # how much RAM to allocate to each container, so each service gets
+    # an allocation, juts using 128mb cos its low + app isnt memory instensive so should be fine
+    mem_limit: 128m
+    # in prod compose file, the env variables are set to the env variables we create
+    # and store on AWS EB. in dev compose version we can just set value explcitly
+    #TODO small chance dont need to define like this and the nev vars are just inherited via EB
+    # go back and delete this and test does it work without them
+    environment:
+      - REDIS_HOST=$REDIS_HOST
+      - REDIS_PORT=$REDIS_PORT
+      - PGUSER=$PGUSER
+      - PGHOST=$PGHOST
+      - PGDATABASE=$PGDATABASE
+      - PGPASSWORD=$PGPASSWORD
+      - PGPORT=$PGPORT
+  client:
+    # We can pull our images directly from docker hub
+    image: "eoinwhelan64/fibonacci-client"
+    # Have to specify what the hostname will be, wont just 
+    # automatically recognise the services TODO - remove this and see does it work
+    hostname: client
+    mem_limit: 128m
+  worker:
+    image: "eoinwhelan64/fibonacci-worker"
+    hostname: worker
+    mem_limit: 128m
+    environment:
+      - REDIS_HOST=$REDIS_HOST
+      - REDIS_PORT=$REDIS_PORT
+  nginx:
+    image: "eoinwhelan64/nginx"
+    depends_on:
+      - api
+      - client
+    mem_limit: 128m
+    ports:
+      - '80:80'
