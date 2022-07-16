@@ -13,11 +13,11 @@ function App() {
           <img src={logo} className="App-logo" alt="logo" />
           <a
             className="App-link"
-            href="https://reactjs.org"
+            href="https://github.com/eoinonps4/fibonacci"
             target="_blank"
             rel="noopener noreferrer"
           >
-            Learn React
+            Project Source
           </a>
           <Link to="/">Home</Link>
           <Link to="/otherpage">Other Page</Link>
